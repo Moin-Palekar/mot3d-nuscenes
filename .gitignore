@@ -1,0 +1,31 @@
+# Build
+build/
+build_*/
+cmake_build_*/
+compile_commands.json
+.cache/
+
+# Data — never commit datasets or detection files
+data/
+*.json.gz
+infos_*.json
+*.pkl
+*.pth
+v1.0-*/
+
+# Results — large, regenerable
+results/
+*.submission.json
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
