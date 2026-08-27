@@ -1,5 +1,7 @@
 # mot3d_nuscenes
 
+[![CI](https://github.com/Moin-Palekar/mot3d_nuscenes/actions/workflows/ci.yml/badge.svg)](https://github.com/Moin-Palekar/mot3d_nuscenes/actions/workflows/ci.yml)
+
 3D multi-object tracking on the nuScenes dataset. C++17, EKF with a CTRV motion
 model, Hungarian data association, evaluated with the official nuScenes tracking
 metrics.
