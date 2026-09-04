@@ -1,0 +1,4 @@
+# Pinned so local and CI run byte-identical formatters. clang-format's output
+# changes between major versions, so an unpinned formatter produces
+# "formatted correctly here, incorrectly there" failures.
+clang-format==23.1.0

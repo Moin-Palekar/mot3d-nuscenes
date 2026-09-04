@@ -1,8 +1,11 @@
-#include <Eigen/Dense>
 #include <gtest/gtest.h>
 
+#include <Eigen/Dense>
+
 // Confirms the build and test harness work before any real code exists.
-TEST(Smoke, BuildSystemWorks) { EXPECT_EQ(1 + 1, 2); }
+TEST(Smoke, BuildSystemWorks) {
+  EXPECT_EQ(1 + 1, 2);
+}
 
 // Confirms Eigen is linked and usable. A 2x2 inverse exercises enough of the
 // library that a broken include path or version mismatch would fail here.
