@@ -5,3 +5,7 @@ add_library(mot3d_core INTERFACE)
 target_include_directories(mot3d_core INTERFACE
   ${CMAKE_SOURCE_DIR}/include
 )
+
+target_link_libraries(mot3d_core INTERFACE
+  Eigen3::Eigen
+)

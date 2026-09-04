@@ -18,6 +18,21 @@ add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_subdirectory(src)
 
+include(FetchContent)
+
+# Pinned rather than using the system Eigen: Homebrew ships 5.x, Ubuntu 22.04
+# ships 3.4. Fetching a fixed version keeps local, CI, and Docker identical.
+FetchContent_Declare(
+  eigen
+  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+  GIT_TAG        3.4.0
+  GIT_SHALLOW    TRUE
+)
+set(EIGEN_BUILD_DOC OFF CACHE BOOL "" FORCE)
+set(EIGEN_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(eigen)
+
 if(MOT3D_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
