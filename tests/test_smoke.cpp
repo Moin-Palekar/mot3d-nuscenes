@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <Eigen/Dense>
+#include <nlohmann/json.hpp>
 
 // Confirms the build and test harness work before any real code exists.
 TEST(Smoke, BuildSystemWorks) {
@@ -27,4 +28,13 @@ TEST(Smoke, EigenVersionIsPinned) {
   EXPECT_EQ(EIGEN_WORLD_VERSION, 3);
   EXPECT_EQ(EIGEN_MAJOR_VERSION, 4);
   EXPECT_EQ(EIGEN_MINOR_VERSION, 0);
+}
+
+// Confirms nlohmann/json is linked and can parse. The detection file is
+// ~345 MB of JSON, so this dependency is load-bearing for the whole project.
+TEST(Smoke, JsonIsLinked) {
+  const auto parsed = nlohmann::json::parse(R"({"translation": [1.0, 2.0, 3.0]})");
+
+  ASSERT_TRUE(parsed.contains("translation"));
+  EXPECT_DOUBLE_EQ(parsed["translation"][1].get<double>(), 2.0);
 }

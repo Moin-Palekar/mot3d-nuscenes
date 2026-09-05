@@ -8,4 +8,5 @@ target_include_directories(mot3d_core INTERFACE
 
 target_link_libraries(mot3d_core INTERFACE
   Eigen3::Eigen
+  nlohmann_json::nlohmann_json
 )
