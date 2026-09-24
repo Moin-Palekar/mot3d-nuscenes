@@ -10,6 +10,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(mot3d_tests
   test_smoke.cpp
+  test_detection.cpp
 )
 
 target_link_libraries(mot3d_tests PRIVATE
