@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
-
 #include <string>
+
+#include <gtest/gtest.h>
 
 #include "mot3d/io/detection.h"
 
