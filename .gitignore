@@ -6,7 +6,7 @@ compile_commands.json
 .cache/
 
 # Data — never commit datasets or detection files
-data/
+/data/
 *.json.gz
 infos_*.json
 *.pkl
