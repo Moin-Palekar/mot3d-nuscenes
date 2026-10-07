@@ -1,0 +1,11 @@
+[
+  {
+    "token": "scene_x",
+    "log_token": "log_1",
+    "nbr_samples": 3,
+    "first_sample_token": "x1",
+    "last_sample_token": "x3",
+    "name": "scene-x",
+    "description": "broken: x2 points to x9, which does not exist"
+  }
+]

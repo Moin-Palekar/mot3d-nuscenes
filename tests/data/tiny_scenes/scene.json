@@ -1,0 +1,20 @@
+[
+  {
+    "token": "scene_a",
+    "log_token": "log_1",
+    "nbr_samples": 3,
+    "first_sample_token": "a1",
+    "last_sample_token": "a3",
+    "name": "scene-a",
+    "description": "three frames, uneven gaps"
+  },
+  {
+    "token": "scene_b",
+    "log_token": "log_1",
+    "nbr_samples": 2,
+    "first_sample_token": "b1",
+    "last_sample_token": "b2",
+    "name": "scene-b",
+    "description": "two frames"
+  }
+]
