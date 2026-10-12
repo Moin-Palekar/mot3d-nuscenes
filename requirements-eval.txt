@@ -1,0 +1,7 @@
+# Official nuScenes tracking scorer and its dependencies.
+# Used locally to compute AMOTA. Not needed by CI, which only builds and tests C++.
+# Install with: pip install -r requirements-eval.txt
+nuscenes-devkit==1.2.0
+motmetrics==1.4.0
+pandas==3.0.6
+numpy==1.26.4
