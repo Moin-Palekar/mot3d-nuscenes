@@ -4,6 +4,7 @@ add_library(mot3d_core
   io/detection.cpp
   io/detection_loader.cpp
   io/scene_loader.cpp
+  io/submission_writer.cpp
 
 )
 
