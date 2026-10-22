@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <gtest/gtest.h>
+
 #include <nlohmann/json.hpp>
 
 #include "mot3d/io/submission_writer.h"
