@@ -14,6 +14,7 @@ add_executable(mot3d_tests
   test_detection_loader.cpp
   test_scene_loader.cpp
   test_submission_writer.cpp
+  test_transform.cpp
 
 )
 

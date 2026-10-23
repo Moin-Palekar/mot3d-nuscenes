@@ -5,7 +5,7 @@ add_library(mot3d_core
   io/detection_loader.cpp
   io/scene_loader.cpp
   io/submission_writer.cpp
-
+  geometry/transform.cpp
 )
 
 target_include_directories(mot3d_core PUBLIC
