@@ -6,6 +6,7 @@ add_library(mot3d_core
   io/scene_loader.cpp
   io/submission_writer.cpp
   geometry/transform.cpp
+  tracking/motion_model.cpp
 )
 
 target_include_directories(mot3d_core PUBLIC
