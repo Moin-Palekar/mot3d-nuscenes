@@ -2,3 +2,6 @@
 # changes between major versions, so an unpinned formatter produces
 # "formatted correctly here, incorrectly there" failures.
 clang-format==23.1.0
+
+# Runs clang-format automatically on every commit (see .pre-commit-config.yaml).
+pre-commit==4.7.0

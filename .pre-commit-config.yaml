@@ -1,0 +1,11 @@
+# Runs before every commit. Set up once per clone with: pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        # Uses the clang-format pinned in requirements-dev.txt (installed in .venv),
+        # the same version CI uses, so local and CI formatting always agree.
+        entry: clang-format -i
+        language: system
+        types_or: [c++, c]
