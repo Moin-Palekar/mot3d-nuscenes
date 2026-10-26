@@ -4,4 +4,4 @@
 clang-format==23.1.0
 
 # Runs clang-format automatically on every commit (see .pre-commit-config.yaml).
-pre-commit==4.7.0
+pre-commit==4.6.2
