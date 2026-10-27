@@ -19,6 +19,9 @@ constexpr int kStateSize = 6;
 using State = Eigen::Matrix<double, kStateSize, 1>;
 using StateJacobian = Eigen::Matrix<double, kStateSize, kStateSize>;
 
+// Wraps an angle into [-pi, pi], so the same heading always has one number.
+double NormalizeAngle(double angle);
+
 // CTRV: constant turn rate and velocity.
 // Moves a state forward by dt seconds, assuming speed and turn rate stay fixed.
 State PredictCtrv(const State& state, double dt);

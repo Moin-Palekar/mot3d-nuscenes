@@ -9,13 +9,12 @@ namespace {
 // formulas divide by the turn rate, which blows up as it approaches zero.
 constexpr double kMinYawRate = 1e-4;
 
-// Wraps an angle into [-pi, pi], so the same heading always has one number.
-const double kPi = std::acos(-1.0);
+}  // namespace
+
 double NormalizeAngle(double angle) {
+  const double kPi = std::acos(-1.0);
   return std::remainder(angle, 2.0 * kPi);
 }
-
-}  // namespace
 
 State PredictCtrv(const State& state, double dt) {
   const double yaw = state[kYaw];
