@@ -18,7 +18,7 @@ add_executable(mot3d_tests
   test_motion_model.cpp
   test_kalman_filter.cpp
   test_cost.cpp
-
+  test_box_overlap.cpp
 )
 
 target_link_libraries(mot3d_tests PRIVATE

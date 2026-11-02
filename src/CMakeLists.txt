@@ -6,6 +6,7 @@ add_library(mot3d_core
   io/scene_loader.cpp
   io/submission_writer.cpp
   geometry/transform.cpp
+  geometry/box_overlap.cpp
   tracking/motion_model.cpp
   tracking/kalman_filter.cpp
   tracking/cost.cpp
