@@ -8,6 +8,7 @@ add_library(mot3d_core
   geometry/transform.cpp
   tracking/motion_model.cpp
   tracking/kalman_filter.cpp
+  tracking/cost.cpp
 
 )
 

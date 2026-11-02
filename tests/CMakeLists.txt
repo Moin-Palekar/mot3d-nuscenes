@@ -17,6 +17,7 @@ add_executable(mot3d_tests
   test_transform.cpp
   test_motion_model.cpp
   test_kalman_filter.cpp
+  test_cost.cpp
 
 )
 
