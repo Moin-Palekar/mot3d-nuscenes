@@ -10,6 +10,7 @@ add_library(mot3d_core
   tracking/motion_model.cpp
   tracking/kalman_filter.cpp
   tracking/cost.cpp
+  tracking/hungarian.cpp
 
 )
 

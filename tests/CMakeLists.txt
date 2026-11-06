@@ -19,6 +19,7 @@ add_executable(mot3d_tests
   test_kalman_filter.cpp
   test_cost.cpp
   test_box_overlap.cpp
+  test_hungarian.cpp
 )
 
 target_link_libraries(mot3d_tests PRIVATE
