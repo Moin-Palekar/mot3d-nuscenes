@@ -99,5 +99,15 @@ TEST(KalmanFilter, LearnsSpeedFromPositions) {
   EXPECT_NEAR(filter.mean[kX], 100.0, 0.5);
 }
 
+TEST(KalmanFilter, CvPredictMovesMeanLikePredictCv) {
+  FilterState filter;
+  filter.mean << 3.0, -2.0, 1.0, 0.7, 8.0, 0.3;
+  const State expected = PredictCv(filter.mean, 0.5);
+  PredictFilter(0.5, NoiseParams{}, &filter, MotionModel::kCv);
+  for (int i = 0; i < kStateSize; ++i) {
+    EXPECT_NEAR(filter.mean[i], expected[i], 1e-12) << "index " << i;
+  }
+}
+
 }  // namespace
 }  // namespace mot3d

@@ -90,5 +90,45 @@ TEST(MotionModel, JacobianMatchesNumericWhenStraight) {
   ExpectJacobianNear(CtrvJacobian(state, 0.5), NumericJacobian(state, 0.5));
 }
 
+TEST(MotionModel, CvMovesStraightAndDropsYawRate) {
+  State state;
+  state << 0.0, 0.0, 1.0, 0.0, 10.0, 0.5;  // facing east, 10 m/s, turning left
+  const State next = PredictCv(state, 0.5);
+  EXPECT_NEAR(next[kX], 5.0, 1e-9);
+  EXPECT_NEAR(next[kY], 0.0, 1e-9);
+  EXPECT_NEAR(next[kZ], 1.0, 1e-9);
+  EXPECT_NEAR(next[kYaw], 0.0, 1e-9);
+  EXPECT_NEAR(next[kSpeed], 10.0, 1e-9);
+  EXPECT_NEAR(next[kYawRate], 0.0, 1e-9);
+}
+
+TEST(MotionModel, CvMatchesCtrvWhenNotTurning) {
+  State state;
+  state << 3.0, -2.0, 1.0, 0.7, 8.0, 0.0;  // yaw_rate 0: driving straight
+  const State cv = PredictCv(state, 0.5);
+  const State ctrv = PredictCtrv(state, 0.5);
+  for (int i = 0; i < kStateSize; ++i) {
+    EXPECT_NEAR(cv[i], ctrv[i], 1e-9) << "index " << i;
+  }
+}
+
+TEST(MotionModel, CvJacobianMatchesNumeric) {
+  State state;
+  state << 3.0, -2.0, 1.0, 0.7, 8.0, 0.3;
+  const double dt = 0.5;
+  const double eps = 1e-6;
+  const StateJacobian analytic = CvJacobian(state, dt);
+  for (int col = 0; col < kStateSize; ++col) {
+    State up = state;
+    State down = state;
+    up[col] += eps;
+    down[col] -= eps;
+    const State slope = (PredictCv(up, dt) - PredictCv(down, dt)) / (2.0 * eps);
+    for (int row = 0; row < kStateSize; ++row) {
+      EXPECT_NEAR(analytic(row, col), slope[row], 1e-6) << "row " << row << " col " << col;
+    }
+  }
+}
+
 }  // namespace
 }  // namespace mot3d

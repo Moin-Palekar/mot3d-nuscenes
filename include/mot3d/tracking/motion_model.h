@@ -30,4 +30,14 @@ State PredictCtrv(const State& state, double dt);
 // changes a tiny bit. The Kalman filter uses this to grow uncertainty correctly.
 StateJacobian CtrvJacobian(const State& state, double dt);
 
+// CV: constant velocity. Moves straight along the heading for dt seconds.
+// Ignores turning: yaw stays fixed and yaw_rate is set to 0.
+State PredictCv(const State& state, double dt);
+
+// The same sensitivity table as CtrvJacobian, for the CV model.
+StateJacobian CvJacobian(const State& state, double dt);
+
+// Which motion model the Kalman filter should use to predict.
+enum class MotionModel { kCtrv, kCv };
+
 }  // namespace mot3d

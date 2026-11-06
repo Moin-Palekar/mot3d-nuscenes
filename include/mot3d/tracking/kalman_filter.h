@@ -49,7 +49,8 @@ struct Innovation {
 FilterState InitFilter(const Measurement& z, double speed, const NoiseParams& noise);
 
 // Moves the belief forward by dt seconds. Uncertainty grows.
-void PredictFilter(double dt, const NoiseParams& noise, FilterState* filter);
+void PredictFilter(double dt, const NoiseParams& noise, FilterState* filter,
+                   MotionModel model = MotionModel::kCtrv);
 
 // Compares a detection with the current belief.
 Innovation ComputeInnovation(const FilterState& filter, const Measurement& z,

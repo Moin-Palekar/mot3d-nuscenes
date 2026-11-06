@@ -69,4 +69,31 @@ StateJacobian CtrvJacobian(const State& state, double dt) {
   return jac;
 }
 
+State PredictCv(const State& state, double dt) {
+  const double yaw = state[kYaw];
+  const double speed = state[kSpeed];
+
+  State next = state;
+  next[kX] += speed * std::cos(yaw) * dt;
+  next[kY] += speed * std::sin(yaw) * dt;
+  // CV does not model turning, so the turn rate is dropped.
+  next[kYawRate] = 0.0;
+  return next;
+}
+
+StateJacobian CvJacobian(const State& state, double dt) {
+  const double yaw = state[kYaw];
+  const double speed = state[kSpeed];
+
+  // Start from "every number only depends on itself".
+  StateJacobian f = StateJacobian::Identity();
+  f(kX, kYaw) = -speed * std::sin(yaw) * dt;
+  f(kX, kSpeed) = std::cos(yaw) * dt;
+  f(kY, kYaw) = speed * std::cos(yaw) * dt;
+  f(kY, kSpeed) = std::sin(yaw) * dt;
+  // The new yaw_rate is always 0, so it responds to nothing.
+  f(kYawRate, kYawRate) = 0.0;
+  return f;
+}
+
 }  // namespace mot3d

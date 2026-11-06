@@ -62,12 +62,13 @@ FilterState InitFilter(const Measurement& z, double speed, const NoiseParams& no
   return filter;
 }
 
-void PredictFilter(double dt, const NoiseParams& noise, FilterState* filter) {
+void PredictFilter(double dt, const NoiseParams& noise, FilterState* filter, MotionModel model) {
+  const bool use_cv = model == MotionModel::kCv;
   // The Jacobian and process noise are worked out at the current belief,
   // so they must be computed before the mean moves.
-  const StateJacobian f = CtrvJacobian(filter->mean, dt);
+  const StateJacobian f = use_cv ? CvJacobian(filter->mean, dt) : CtrvJacobian(filter->mean, dt);
   filter->cov = f * filter->cov * f.transpose() + ProcessNoise(filter->mean, dt, noise);
-  filter->mean = PredictCtrv(filter->mean, dt);
+  filter->mean = use_cv ? PredictCv(filter->mean, dt) : PredictCtrv(filter->mean, dt);
 }
 
 Innovation ComputeInnovation(const FilterState& filter, const Measurement& z,
