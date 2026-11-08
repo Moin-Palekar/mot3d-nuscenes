@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "mot3d/geometry/box_overlap.h"
+
 namespace mot3d {
 
 Measurement ToMeasurement(const Detection& det) {
@@ -22,6 +24,22 @@ double MahalanobisCost(const FilterState& filter, const Detection& det, const No
   // big a gap was expected in each direction.
   const double squared = innovation.residual.dot(innovation.cov.inverse() * innovation.residual);
   return std::sqrt(squared);
+}
+
+double IouCost(const Track& track, const Detection& det) {
+  const State& mean = track.filter.mean;
+
+  OrientedBox track_box;
+  track_box.center = Eigen::Vector3d(mean[kX], mean[kY], mean[kZ]);
+  track_box.size = track.size;
+  track_box.yaw = mean[kYaw];
+
+  OrientedBox det_box;
+  det_box.center = det.center;
+  det_box.size = det.size;
+  det_box.yaw = det.yaw;
+
+  return 1.0 - BoxIou(track_box, det_box);
 }
 
 }  // namespace mot3d

@@ -91,5 +91,43 @@ TEST(Cost, MahalanobisPrefersGapAheadOfMovingCar) {
   EXPECT_LT(ahead, sideways);
 }
 
+// A track whose filter believes it is at (x, y, 1), facing yaw, sized 2 x 4 x 1.5.
+Track MakeTrackAt(double x, double y, double yaw) {
+  Track track;
+  track.filter.mean << x, y, 1.0, yaw, 0.0, 0.0;
+  track.size = Eigen::Vector3d(2.0, 4.0, 1.5);
+  return track;
+}
+
+// A detection box at (x, y, 1), facing yaw, sized 2 x 4 x 1.5.
+Detection MakeBoxDetection(double x, double y, double yaw) {
+  Detection det;
+  det.center = Eigen::Vector3d(x, y, 1.0);
+  det.size = Eigen::Vector3d(2.0, 4.0, 1.5);
+  det.yaw = yaw;
+  return det;
+}
+
+TEST(Cost, IouCostIsZeroForIdenticalBoxes) {
+  EXPECT_NEAR(IouCost(MakeTrackAt(5.0, 2.0, 0.3), MakeBoxDetection(5.0, 2.0, 0.3)), 0.0, 1e-9);
+}
+
+TEST(Cost, IouCostIsOneWhenBoxesDoNotTouch) {
+  EXPECT_NEAR(IouCost(MakeTrackAt(0.0, 0.0, 0.0), MakeBoxDetection(50.0, 0.0, 0.0)), 1.0, 1e-9);
+}
+
+TEST(Cost, IouCostUsesTrackPosition) {
+  // Shifted half a length along x: overlap 2 m, union 6 m, IoU 1/3.
+  EXPECT_NEAR(IouCost(MakeTrackAt(0.0, 0.0, 0.0), MakeBoxDetection(2.0, 0.0, 0.0)), 2.0 / 3.0,
+              1e-9);
+}
+
+TEST(Cost, IouCostUsesTrackSize) {
+  // Same centre, detection half as long: it sits inside the track's box, IoU 1/2.
+  Detection det = MakeBoxDetection(0.0, 0.0, 0.0);
+  det.size = Eigen::Vector3d(2.0, 2.0, 1.5);
+  EXPECT_NEAR(IouCost(MakeTrackAt(0.0, 0.0, 0.0), det), 0.5, 1e-9);
+}
+
 }  // namespace
 }  // namespace mot3d
