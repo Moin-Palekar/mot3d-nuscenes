@@ -12,6 +12,7 @@ add_library(mot3d_core
   tracking/cost.cpp
   tracking/hungarian.cpp
   tracking/track.cpp
+  tracking/tracker.cpp
 
 )
 
