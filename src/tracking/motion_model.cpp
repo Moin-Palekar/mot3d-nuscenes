@@ -86,14 +86,14 @@ StateJacobian CvJacobian(const State& state, double dt) {
   const double speed = state[kSpeed];
 
   // Start from "every number only depends on itself".
-  StateJacobian f = StateJacobian::Identity();
-  f(kX, kYaw) = -speed * std::sin(yaw) * dt;
-  f(kX, kSpeed) = std::cos(yaw) * dt;
-  f(kY, kYaw) = speed * std::cos(yaw) * dt;
-  f(kY, kSpeed) = std::sin(yaw) * dt;
+  StateJacobian jac = StateJacobian::Identity();
+  jac(kX, kYaw) = -speed * std::sin(yaw) * dt;
+  jac(kX, kSpeed) = std::cos(yaw) * dt;
+  jac(kY, kYaw) = speed * std::cos(yaw) * dt;
+  jac(kY, kSpeed) = std::sin(yaw) * dt;
   // The new yaw_rate is always 0, so it responds to nothing.
-  f(kYawRate, kYawRate) = 0.0;
-  return f;
+  jac(kYawRate, kYawRate) = 0.0;
+  return jac;
 }
 
 }  // namespace mot3d
