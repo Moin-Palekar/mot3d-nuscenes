@@ -56,7 +56,7 @@ std::vector<TrackedBox> Tracker::Step(const std::vector<Detection>& detections, 
 
     // 4. Apply the result.
     for (const auto& [t, d] : assignment.matches) {
-      UpdateTrack(detections[d], params_.noise, &tracks_[t]);
+      UpdateTrack(detections[d], params_.noise, &tracks_[t], params_.use_velocity);
     }
     for (int t : assignment.unmatched_tracks) {
       MarkMissed(&tracks_[t]);

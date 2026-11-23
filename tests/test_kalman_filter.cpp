@@ -109,5 +109,38 @@ TEST(KalmanFilter, CvPredictMovesMeanLikePredictCv) {
   }
 }
 
+TEST(KalmanFilter, UpdateSpeedPullsSpeedTowardDetector) {
+  const NoiseParams noise;
+  Measurement z;
+  z << 0.0, 0.0, 1.0, 0.0;
+  FilterState filter = InitFilter(z, 0.0, noise);  // speed 0, very unsure (std 5 m/s)
+  const double variance_before = filter.cov(kSpeed, kSpeed);
+
+  UpdateSpeed(10.0, noise, &filter);
+
+  // An unsure belief (std 5) meets a confident measurement (std 1): gain 25 / 26,
+  // so speed moves most of the way, to about 9.6.
+  EXPECT_GT(filter.mean[kSpeed], 9.0);
+  EXPECT_LT(filter.mean[kSpeed], 10.0);
+  EXPECT_LT(filter.cov(kSpeed, kSpeed), variance_before);
+}
+
+TEST(KalmanFilter, UpdateSpeedLeavesUnrelatedNumbersAlone) {
+  const NoiseParams noise;
+  Measurement z;
+  z << 3.0, -2.0, 1.0, 0.5;
+  // Right after InitFilter nothing is linked to speed, so only speed may move.
+  FilterState filter = InitFilter(z, 0.0, noise);
+  const State before = filter.mean;
+
+  UpdateSpeed(10.0, noise, &filter);
+
+  for (int i = 0; i < kStateSize; ++i) {
+    if (i != kSpeed) {
+      EXPECT_DOUBLE_EQ(filter.mean[i], before[i]) << "index " << i;
+    }
+  }
+}
+
 }  // namespace
 }  // namespace mot3d

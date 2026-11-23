@@ -28,8 +28,15 @@ void PredictTrack(double dt, const NoiseParams& noise, MotionModel model, Track*
   PredictFilter(dt, noise, &track->filter, model);
 }
 
-void UpdateTrack(const Detection& det, const NoiseParams& noise, Track* track) {
+void UpdateTrack(const Detection& det, const NoiseParams& noise, Track* track, bool use_velocity) {
   UpdateFilter(ToMeasurement(det), noise, &track->filter);
+  if (use_velocity && det.velocity_valid) {
+    // Project onto the track heading, which is steadier than the detection heading
+    // (the detector sometimes flips a box by 180 degrees).
+    const double yaw = track->filter.mean[kYaw];
+    UpdateSpeed(det.velocity.x() * std::cos(yaw) + det.velocity.y() * std::sin(yaw), noise,
+                &track->filter);
+  }
   track->size = det.size;
   track->score = det.score;
   ++track->hits;

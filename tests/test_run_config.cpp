@@ -92,5 +92,16 @@ TEST(RunConfig, FailureLeavesOutputUntouched) {
   EXPECT_EQ(config.tracker.track.min_hits, 7);
 }
 
+TEST(RunConfig, ReadsVelocitySettings) {
+  RunConfig config;
+  std::string error;
+  ASSERT_TRUE(LoadRunConfig(
+      WriteTemp("rc_velocity.json", R"({"use_velocity": true, "noise": {"speed_std": 0.5}})"),
+      &config, &error))
+      << error;
+  EXPECT_TRUE(config.tracker.use_velocity);
+  EXPECT_EQ(config.tracker.noise.speed_std, 0.5);
+}
+
 }  // namespace
 }  // namespace mot3d

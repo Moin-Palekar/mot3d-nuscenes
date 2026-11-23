@@ -40,7 +40,9 @@ Track StartTrack(const Detection& det, int id, const NoiseParams& noise);
 void PredictTrack(double dt, const NoiseParams& noise, MotionModel model, Track* track);
 
 // Blends a matched detection into the track.
-void UpdateTrack(const Detection& det, const NoiseParams& noise, Track* track);
+// With use_velocity, the detector speed is also blended in (see UpdateSpeed).
+void UpdateTrack(const Detection& det, const NoiseParams& noise, Track* track,
+                 bool use_velocity = false);
 
 // Records a frame where no detection matched this track.
 void MarkMissed(Track* track);

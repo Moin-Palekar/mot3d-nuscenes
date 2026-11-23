@@ -24,6 +24,9 @@ struct TrackerParams {
   // need their own values (set in M3).
   double max_cost = 3.64;
 
+  // Also blend the detector speed into every update (see UpdateSpeed).
+  bool use_velocity = false;
+
   NoiseParams noise;
   TrackParams track;
 };

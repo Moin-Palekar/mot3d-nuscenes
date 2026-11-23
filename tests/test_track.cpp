@@ -121,5 +121,21 @@ TEST(Track, ToTrackedBoxUsesFilteredBelief) {
   EXPECT_EQ(out.box.cls, ClassId::kTruck);
 }
 
+TEST(Track, UpdateUsesDetectorSpeedOnlyWhenEnabled) {
+  // Born with no velocity, so speed 0. Then a detection at the same spot reports 10 m/s east.
+  const Track born = StartTrack(MakeDetection(0.0, 0.0, 0.0), 0, NoiseParams{});
+  Detection moving = MakeDetection(0.0, 0.0, 0.0);
+  moving.velocity = Eigen::Vector2d(10.0, 0.0);
+  moving.velocity_valid = true;
+
+  Track with_velocity = born;
+  UpdateTrack(moving, NoiseParams{}, &with_velocity, true);
+  EXPECT_GT(with_velocity.filter.mean[kSpeed], 5.0);
+
+  Track without_velocity = born;
+  UpdateTrack(moving, NoiseParams{}, &without_velocity);  // default: off
+  EXPECT_NEAR(without_velocity.filter.mean[kSpeed], 0.0, 1e-9);
+}
+
 }  // namespace
 }  // namespace mot3d

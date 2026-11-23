@@ -97,4 +97,22 @@ void UpdateFilter(const Measurement& z, const NoiseParams& noise, FilterState* f
       i_kh * filter->cov * i_kh.transpose() + gain * MeasurementNoise(noise) * gain.transpose();
 }
 
+void UpdateSpeed(double speed, const NoiseParams& noise, FilterState* filter) {
+  // The same blend as UpdateFilter, measuring one state number: speed.
+  Eigen::Matrix<double, 1, kStateSize> h = Eigen::Matrix<double, 1, kStateSize>::Zero();
+  h(0, kSpeed) = 1.0;
+  const double speed_variance = noise.speed_std * noise.speed_std;
+
+  const double residual = speed - filter->mean[kSpeed];
+  const double innovation_variance = filter->cov(kSpeed, kSpeed) + speed_variance;
+  const State gain = filter->cov.col(kSpeed) / innovation_variance;
+
+  filter->mean += gain * residual;
+  filter->mean[kYaw] = NormalizeAngle(filter->mean[kYaw]);
+
+  // Joseph form, as in UpdateFilter.
+  const StateCovariance i_kh = StateCovariance::Identity() - gain * h;
+  filter->cov = i_kh * filter->cov * i_kh.transpose() + speed_variance * gain * gain.transpose();
+}
+
 }  // namespace mot3d

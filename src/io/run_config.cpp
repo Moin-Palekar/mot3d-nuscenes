@@ -65,10 +65,10 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
       *error = path + ": the top level must be a JSON object";
       return false;
     }
-    if (!CheckKeys(
-            root,
-            {"min_score", "motion_model", "cost", "max_cost", "min_hits", "max_misses", "noise"},
-            path, error)) {
+    if (!CheckKeys(root,
+                   {"min_score", "motion_model", "cost", "max_cost", "min_hits", "max_misses",
+                    "noise", "use_velocity"},
+                   path, error)) {
       return false;
     }
 
@@ -88,6 +88,7 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
     config.tracker.max_cost = root.value("max_cost", config.tracker.max_cost);
     config.tracker.track.min_hits = root.value("min_hits", config.tracker.track.min_hits);
     config.tracker.track.max_misses = root.value("max_misses", config.tracker.track.max_misses);
+    config.tracker.use_velocity = root.value("use_velocity", config.tracker.use_velocity);
 
     if (root.contains("noise")) {
       const Json& noise = root.at("noise");
@@ -97,7 +98,7 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
       }
       if (!CheckKeys(noise,
                      {"accel_std", "yaw_accel_std", "z_drift_std", "pos_std", "z_std", "yaw_std",
-                      "init_speed_std", "init_yaw_rate_std"},
+                      "init_speed_std", "init_yaw_rate_std", "speed_std"},
                      path + " (noise)", error)) {
         return false;
       }
@@ -110,6 +111,7 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
       params.yaw_std = noise.value("yaw_std", params.yaw_std);
       params.init_speed_std = noise.value("init_speed_std", params.init_speed_std);
       params.init_yaw_rate_std = noise.value("init_yaw_rate_std", params.init_yaw_rate_std);
+      params.speed_std = noise.value("speed_std", params.speed_std);
     }
 
     *out = config;

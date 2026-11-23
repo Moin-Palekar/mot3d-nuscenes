@@ -21,9 +21,10 @@ struct NoiseParams {
   double z_drift_std = 0.5;    // m per sqrt(second), random change in height
 
   // Measurement noise: how far off a single detection can be.
-  double pos_std = 0.5;  // m, for x and y
-  double z_std = 0.5;    // m
-  double yaw_std = 0.2;  // rad
+  double pos_std = 0.5;    // m, for x and y
+  double z_std = 0.5;      // m
+  double yaw_std = 0.2;    // rad
+  double speed_std = 1.0;  // m/s, the detector's own speed estimate
 
   // Starting uncertainty for what one detection can't tell us.
   double init_speed_std = 5.0;     // m/s
@@ -58,5 +59,9 @@ Innovation ComputeInnovation(const FilterState& filter, const Measurement& z,
 
 // Blends a detection into the belief. Uncertainty shrinks.
 void UpdateFilter(const Measurement& z, const NoiseParams& noise, FilterState* filter);
+
+// Blends the detector's speed estimate into the belief: a one-number update
+// on speed alone, run after UpdateFilter when a detection has a velocity.
+void UpdateSpeed(double speed, const NoiseParams& noise, FilterState* filter);
 
 }  // namespace mot3d
