@@ -5,6 +5,7 @@ add_library(mot3d_core
   io/detection_loader.cpp
   io/scene_loader.cpp
   io/submission_writer.cpp
+  io/run_config.cpp
   geometry/transform.cpp
   geometry/box_overlap.cpp
   tracking/motion_model.cpp

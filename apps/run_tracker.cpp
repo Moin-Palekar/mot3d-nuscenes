@@ -1,7 +1,8 @@
 // Runs the tracker over every nuScenes scene covered by a detection file and
 // writes the result in the official nuScenes tracking submission format.
 //
-// Usage: run_tracker <detections.json> <table_dir> <submission.json>
+// Usage: run_tracker <detections.json> <table_dir> <submission.json> [config.json]
+// Without a config file, every setting keeps its default value.
 
 #include <cstddef>
 #include <iostream>
@@ -11,13 +12,15 @@
 #include <vector>
 
 #include "mot3d/io/detection_loader.h"
+#include "mot3d/io/run_config.h"
 #include "mot3d/io/scene_loader.h"
 #include "mot3d/io/submission_writer.h"
 #include "mot3d/tracking/tracker.h"
 
 int main(int argc, char** argv) {
-  if (argc != 4) {
-    std::cerr << "usage: " << argv[0] << " <detections.json> <table_dir> <submission.json>\n";
+  if (argc != 4 && argc != 5) {
+    std::cerr << "usage: " << argv[0]
+              << " <detections.json> <table_dir> <submission.json> [config.json]\n";
     return 2;
   }
   const std::string detections_path = argv[1];
@@ -25,8 +28,14 @@ int main(int argc, char** argv) {
   const std::string output_path = argv[3];
 
   std::string error;
+  mot3d::RunConfig config;  // defaults, unless a config file overrides them
+  if (argc == 5 && !mot3d::LoadRunConfig(argv[4], &config, &error)) {
+    std::cerr << "loading the config failed: " << error << "\n";
+    return 1;
+  }
+
   std::unordered_map<std::string, mot3d::Frame> frames;
-  if (!mot3d::LoadDetections(detections_path, mot3d::LoadOptions{}, &frames, &error)) {
+  if (!mot3d::LoadDetections(detections_path, config.load, &frames, &error)) {
     std::cerr << "loading detections failed: " << error << "\n";
     return 1;
   }
@@ -36,7 +45,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  mot3d::Tracker tracker{mot3d::TrackerParams{}};
+  mot3d::Tracker tracker{config.tracker};
   std::unordered_map<std::string, std::vector<mot3d::TrackedBox>> results;
   std::size_t scenes_run = 0;
   std::size_t boxes_written = 0;
