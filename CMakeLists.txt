@@ -17,6 +17,7 @@ option(MOT3D_BUILD_TESTS "Build unit tests" ON)
 add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_subdirectory(src)
+add_subdirectory(apps)
 
 include(FetchContent)
 
