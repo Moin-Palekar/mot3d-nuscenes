@@ -103,5 +103,14 @@ TEST(RunConfig, ReadsVelocitySettings) {
   EXPECT_EQ(config.tracker.noise.speed_std, 0.5);
 }
 
+TEST(RunConfig, ReadsCoastSetting) {
+  RunConfig config;
+  std::string error;
+  ASSERT_TRUE(
+      LoadRunConfig(WriteTemp("rc_coast.json", R"({"coast_score_decay": 0.5})"), &config, &error))
+      << error;
+  EXPECT_EQ(config.tracker.track.coast_score_decay, 0.5);
+}
+
 }  // namespace
 }  // namespace mot3d

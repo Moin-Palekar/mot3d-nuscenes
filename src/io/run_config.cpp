@@ -67,7 +67,7 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
     }
     if (!CheckKeys(root,
                    {"min_score", "motion_model", "cost", "max_cost", "min_hits", "max_misses",
-                    "noise", "use_velocity"},
+                    "noise", "use_velocity", "coast_score_decay"},
                    path, error)) {
       return false;
     }
@@ -89,6 +89,8 @@ bool LoadRunConfig(const std::string& path, RunConfig* out, std::string* error) 
     config.tracker.track.min_hits = root.value("min_hits", config.tracker.track.min_hits);
     config.tracker.track.max_misses = root.value("max_misses", config.tracker.track.max_misses);
     config.tracker.use_velocity = root.value("use_velocity", config.tracker.use_velocity);
+    config.tracker.track.coast_score_decay =
+        root.value("coast_score_decay", config.tracker.track.coast_score_decay);
 
     if (root.contains("noise")) {
       const Json& noise = root.at("noise");

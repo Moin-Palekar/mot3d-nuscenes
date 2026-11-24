@@ -16,6 +16,9 @@ namespace mot3d {
 struct TrackParams {
   int min_hits = 2;    // matched frames needed before the track is reported
   int max_misses = 2;  // unmatched frames in a row allowed before deletion
+  // Keep reporting a missed track at its predicted position, with its score multiplied
+  // by this once per missed frame. 0 turns coasting off.
+  double coast_score_decay = 0.0;
 };
 
 // One object being followed over time.
@@ -49,6 +52,9 @@ void MarkMissed(Track* track);
 
 // True if the track should appear in this frame's output.
 bool ShouldReport(const Track& track, const TrackParams& params);
+
+// The confidence to report: the latest detection score, lowered once per missed frame.
+double ReportedScore(const Track& track, const TrackParams& params);
 
 // True if the track has been missing too long and should be removed.
 bool ShouldDelete(const Track& track, const TrackParams& params);

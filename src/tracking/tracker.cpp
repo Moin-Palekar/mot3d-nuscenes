@@ -77,7 +77,9 @@ std::vector<TrackedBox> Tracker::Step(const std::vector<Detection>& detections, 
   std::vector<TrackedBox> reported;
   for (const Track& track : tracks_) {
     if (ShouldReport(track, params_.track)) {
-      reported.push_back(ToTrackedBox(track, sample_token));
+      TrackedBox box = ToTrackedBox(track, sample_token);
+      box.box.score = ReportedScore(track, params_.track);
+      reported.push_back(box);
     }
   }
   return reported;

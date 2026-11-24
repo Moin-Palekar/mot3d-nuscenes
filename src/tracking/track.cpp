@@ -48,7 +48,11 @@ void MarkMissed(Track* track) {
 }
 
 bool ShouldReport(const Track& track, const TrackParams& params) {
-  return track.hits >= params.min_hits && track.misses == 0;
+  return track.hits >= params.min_hits && (track.misses == 0 || params.coast_score_decay > 0.0);
+}
+
+double ReportedScore(const Track& track, const TrackParams& params) {
+  return track.score * std::pow(params.coast_score_decay, track.misses);
 }
 
 bool ShouldDelete(const Track& track, const TrackParams& params) {

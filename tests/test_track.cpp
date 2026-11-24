@@ -137,5 +137,28 @@ TEST(Track, UpdateUsesDetectorSpeedOnlyWhenEnabled) {
   EXPECT_NEAR(without_velocity.filter.mean[kSpeed], 0.0, 1e-9);
 }
 
+TEST(Track, CoastingReportsMissedTrackWithLowerScore) {
+  TrackParams params;
+  params.min_hits = 1;
+  params.coast_score_decay = 0.5;
+  Track track = StartTrack(MakeDetection(0.0, 0.0, 0.0), 0, NoiseParams{});  // score 0.8
+
+  MarkMissed(&track);
+  EXPECT_TRUE(ShouldReport(track, params));  // missed, but coasting is on
+  EXPECT_NEAR(ReportedScore(track, params), 0.4, 1e-12);
+
+  MarkMissed(&track);
+  EXPECT_NEAR(ReportedScore(track, params), 0.2, 1e-12);
+}
+
+TEST(Track, NoCoastingByDefault) {
+  TrackParams params;
+  params.min_hits = 1;
+  Track track = StartTrack(MakeDetection(0.0, 0.0, 0.0), 0, NoiseParams{});
+  EXPECT_NEAR(ReportedScore(track, params), 0.8, 1e-12);  // matched: full score
+  MarkMissed(&track);
+  EXPECT_FALSE(ShouldReport(track, params));
+}
+
 }  // namespace
 }  // namespace mot3d
